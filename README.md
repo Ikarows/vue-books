@@ -154,7 +154,7 @@ import api from '@/api'
 export default {
     mounted: function() {
         //axios
-        var msg = "人渣的本愿";
+        var msg = "千里之外";
 
         //1.配合vuex后这步就放在store/index.vue下了，由dispatch调用，例2.
         axios.get(api.getMusic(msg)).then(function(data){
@@ -169,7 +169,7 @@ export default {
         })
 
         //2.配合 vuex的写法，调用获取数据：
-        this.$store.dispatch('getData', '人渣的本愿');
+        this.$store.dispatch('getData', '千里之外');
     }
 }
 ```
@@ -264,7 +264,7 @@ export default {
     },
     mounted: function () {
       //vuex
-      this.$store.dispatch('getData', '人渣的本愿');
+      this.$store.dispatch('getData', '千里之外');
       //关闭loading
       this.$store.state.show = false
     }
