@@ -14,10 +14,10 @@ cli                                    // 脚手架
 > 安装篇：从零搭建环境
 
 ```bash
-必经操作：
+安装流程：
 1. 安装 node.js                        // https://nodejs.org/en/
 2. 安装 git                            // https://git-scm.com/downloads
-3. 右键使用 Git Bash Here 命令操作
+3. 右键使用 Git Bash Here 模拟linux命令操作
 4. 安装 vue                            // npm install -g vue
 5. 安装脚手架 cli                       // npm install -g vue-cli
 6. 选择一个磁盘                         // c:/
@@ -32,7 +32,7 @@ cli                                    // 脚手架
 ? Setup e2e tests with Nightwatch? (Y/n) n
 
 8. 进入创建好的vue项目目录               // cd vue
-9. 启动"蓝灯"安装 npm                   // npm install
+9.  安装 npm                            // npm install
 10. 启动项目                            // npm run dev
 11. 编译打包                            // npm run build
 
@@ -43,7 +43,7 @@ cli                                    // 脚手架
 15. 安装 axios                         // npm install axios
 
 
-**: 如果npm在国内的网络环境下可能会比较慢，解决方案：
+**: 如果npm在国内的网络环境下安装可能会比较慢，解决方案：
 
   使用淘宝镜像:
 
@@ -76,9 +76,10 @@ cli                                    // 脚手架
   |       |-- header.vue               // 页面头部公共组件
   |   |-- router                       // 路由配置和程序的基本信息配置
   |       |-- index.js                 // 配置页面路由
-  |   |-- store                         // vuex的状态管理
+  |   |-- store                        // vuex的状态管理
   |       |-- index.js                 // 加载各种store模块
-  |       |-- user.js                  // 用户store
+  |       |-- modules                  //模块化         
+  |          |-- login                 // 模块化store
   |   |-- views                        // 模版html文件
   |       |-- index                    // 网站首页
   |       |-- login                    // 登录
@@ -103,7 +104,7 @@ html:
 
 ```js
 js:
-import header from '@/components/header.vue' //引用组件进来
+import header from '@/components/header.vue' //引用组件
 export default {
 	data () {
 		return {
@@ -240,7 +241,7 @@ new Vue({
 
 ```
 
-3.组件js里调用 hello.vue
+3.在组件js里调用。 => hello.vue
 
 ```js
 
@@ -271,31 +272,76 @@ export default {
 }
 ```
 
-4.组件页面上使用 hello.vue
+4.组件页面上使用。 => hello.vue
 
 ```html
-
 <p>{{massage}}</p>
 ```
 
+>vuex 进阶版：模块化
+
+```html
+结构：
+|-- store                        // vuex的状态管理
+|      |-- index.js              // 加载各种store模块
+|      |-- modules               // 模块化         
+|           |-- login            // 模块化store
+```
+
+```js
+//1.路径 ./store/index.js
+import Vue from "vue"
+import Vuex from "vuex"
+import user from './modules/user.js' // => 引入分离的子模块
+
+Vue.use(Vuex);
+
+const store = new Vuex.Store({
+    modules:{
+    	user
+    }
+});
+
+export default store;
+```
+
+```js
+//2.路径 ./store/modules/user.js
+import axios from "axios"
+import api from '@/api'
+
+export default {
+	state: {
+		todo: 'this is vuex data'
+	},
+	mutations: {
+		settodo (state, item) {
+			state.todo = item;
+		}
+	},
+	actions: {
+		getData (store, msg) {
+			axios.get(api.getData(msg)).then(function(data){
+				console.log(data.data.result);
+				store.commit('settodo', data.data.result);
+			}).catch((err) => {
+				console.log(err);
+			})
+		}
+	},
+	modules: {}
+}
+```
+
+```js
+//3.调用
+console.log(this.$store.state.user.todo); //｛user}为子模块名称
+```
+
+
 #### router
 
-1.组件页面上的链接使用，替代a标签
-
-```html
-<!-- 普通链接 -->
-<router-link :to="{ path: '/child' }">跳转到第二个页面</router-link>
-<!-- 带参数的链接 -->
-<router-link :to="{ path: '/child/page', query: {userid: 123} }">跳转到第三个页面</router-link>
-```
-
-2.获取路由参数
-```html
-
-<p>{{this.$route.query.userid}}</p>
-```
-
-3.路由配置
+1.路由配置
 
 ```js
 
@@ -328,6 +374,102 @@ export default new Router({
 })
 
 /* 注：路由的全局注入方面在webpack建项目的时候就己经安装好路由了，所以就不用再手动去注入，只要去配置路由的各种路径即可。 */
+```
+
+2.组件页面上的链接使用，替代a标签
+
+a. get请求传参
+```html
+
+方式1：
+<router-link :to="{ path: '/child' }">跳转到第二个页面</router-link> <!-- 普通链接 -->
+<router-link :to="{ path: '/child/page', query: {userid: 123} }">跳转到第三个页面</router-link> <!-- 带参数的链接 -->
+<p>{{this.$route.query.userid}}</p> <!-- 获取路由参数 -->
+
+方式2：
+<router-link to="/game?age=20">to game</router-link>
+<p>{{this.$route.query.age}}</p> <!-- 获取路由参数 -->
+```
+
+b. 路由匹配参数
+```js
+{
+  path: '/game/:age',
+  name: 'game',
+  component: Game
+}
+<p>{{this.$route.params.age}}</p> <!-- 获取路由参数 -->
+```
+
+c. 跳转 (字符串,这里的字符串是路径path匹配噢，不是router配置里的name)
+
+```js
+export default {
+	name: 'game',
+	mounted: function () {
+		this.$router.push('home')
+        //对象
+        this.$router.push({ path: 'home' })
+        //命名的路由 这里会变成 /user/123
+        this.$router.push({ name: 'user', params: { userId: 123 }})
+        //带查询参数，变成 /register?plan=private
+        this.$router.push({ path: 'register', query: { plan: 'private' }})
+	}
+}
+```
+
+d.全局钩子函数（可以做一些全局性的路由拦截，如登录验证）
+写在main.js中
+
+```js
+router.beforeEach((to, from, next)=>{
+  //do something
+  next();
+});
+router.afterEach((to, from, next) => {
+    console.log(to.path);
+});
+```
+
+e.单个页面钩子函数
+写在router/index.js中
+
+```js
+const router = new VueRouter({
+  routes: [
+    {
+      path: '/foo',
+      component: Foo,
+      /* 配置哪几个页面需要登录的时候，你可以在meta中加入一个 requiresAuth标志位,然后在 全局钩子函数 beforeEach中去校验目标页面是否需要登录。*/
+      meta: { requiresAuth: true },
+      beforeEnter: (to, from, next) => {
+        // ...
+      }
+    }
+  ]
+})
+```
+
+登录验证实例：
+```js
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    //校验这个目标页面是否需要登录
+    if (!auth.loggedIn()) {  
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() // 确保一定要调用 next()
+  }
+})
+
+//这个auth.loggedIn 方法是外部引入的，你可以先写好一个校验是否登录的方法，再import进 router.js中去判断。
 ```
 
 未完待续...
