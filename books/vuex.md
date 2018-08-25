@@ -1,5 +1,14 @@
 # vuex
 
+### 安装
+```
+// npm
+npm install vuex --save
+
+// cnpm
+cnpm install vuex --save
+```
+
 ### 项目结构
 ```
 └── store
