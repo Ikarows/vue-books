@@ -12,7 +12,27 @@ cnpm install axios
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 ```
 
+### api
+
+```
+// api/index.js
+
+/**
+ * api 接口地址
+ *
+ */
+//https://api.imjad.cn/hitokoto.md
+const _base = 'https://api.imjad.cn';
+
+export default {
+    getData : _base + '/hitokoto/'
+}
+
+```
+
+
 ### 单独使用
+
 ```
 
 //无参数
@@ -59,7 +79,8 @@ axios.interceptors.response.use(function (response) {
 
 ### 与vuex使用
 ```
-// 1.页面上请求 
+
+// 1.页面上发起请求
 mounted: function () {
     let params = {
         cat: "",
@@ -69,15 +90,12 @@ mounted: function () {
         fun: "sync",
         source: "",
     }
+    //调用actions里的方法请求数据
     this.$store.dispatch('getData', params);
 }
 
-```
 
-
-```
-
-// 2.vuex使用
+// 2.vuex里请求
 
 /*
 * user.js
