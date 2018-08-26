@@ -9,6 +9,23 @@ npm install vuex --save
 cnpm install vuex --save
 ```
 
+### main.js 中注册
+```
+import Vue from 'vue'
+import App from './App'
+import store from './store' //全局注册
+
+Vue.config.productionTip = false
+
+new Vue({
+    el: '#app',
+    store, //全局注册
+    components: { App },
+    template: '<App/>'
+})
+
+```
+
 ### 项目结构
 ```
 └── store
@@ -96,3 +113,5 @@ export default {
 ```
 {{ todo }}
 ```
+
+For a detailed explanation on how things work, check out the guide [veux](https://vuex.vuejs.org/zh/).

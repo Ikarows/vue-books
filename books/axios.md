@@ -127,3 +127,5 @@ export default {
     }
 }
 ```
+
+For a detailed explanation on how things work, check out the guide [axios](https://www.kancloud.cn/yunye/axios/234845).
