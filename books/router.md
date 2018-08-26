@@ -133,7 +133,7 @@ export default {
 	name: 'game',
 	mounted: function () {
 
-		this.$router.push('home')
+	    this.$router.push('home')
 
         //对象
         this.$router.push({ path: 'home' })
@@ -221,7 +221,7 @@ router.beforeEach((to, from, next) => {
     next() // 确保一定要调用 next()
   }
 })
-
+ 
 //这个auth.loggedIn 方法是外部引入的，你可以先写好一个校验是否登录的方法，再import进 router.js中去判断。
 ```
 
