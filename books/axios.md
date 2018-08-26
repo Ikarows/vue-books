@@ -14,7 +14,7 @@ cnpm install axios
 
 ### api
 
-```bash
+```
 // api/index.js
 
 /**
@@ -33,7 +33,7 @@ export default {
 
 ### 单独使用
 
-```bash
+```
 
 //无参数
 axios.get(api.getData).then(data => {
@@ -78,7 +78,7 @@ axios.interceptors.response.use(function (response) {
 ```
 
 ### 与vuex使用
-```bash
+```
 
 // 1.页面上发起请求
 mounted: function () {

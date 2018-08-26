@@ -10,7 +10,7 @@ cnpm install vuex --save
 ```
 
 ### main.js 中注册
-```bash
+```
 import Vue from 'vue'
 import App from './App'
 import store from './store' //全局注册
@@ -27,7 +27,7 @@ new Vue({
 ```
 
 ### 项目结构
-```bash
+```
 └── store
     ├── index.js          # 我们组装模块并导出 store 的地方
     └── modules
@@ -36,7 +36,7 @@ new Vue({
 ```
 
 ### 基础代码与流程
-```bash
+```
 //index.js
 import Vue from "vue"
 import Vuex from "vuex"
@@ -54,7 +54,7 @@ export default store;
 ```
 
 #### 
-```bash
+```
 /*
 * user.js
 * 流程：actions -> mutations -> state
@@ -85,7 +85,7 @@ export default {
 ```
 
 ### 组件调用
-```bash
+```
 export default {
     name: '',
 
@@ -110,7 +110,7 @@ export default {
 ```
 
 ### 模版调用
-```bash
+```
 {{ todo }}
 ```
 
