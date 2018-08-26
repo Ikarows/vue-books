@@ -224,5 +224,5 @@ router.beforeEach((to, from, next) => {
 
 //这个auth.loggedIn 方法是外部引入的，你可以先写好一个校验是否登录的方法，再import进 router.js中去判断。
 ```
-
+ 
 For a detailed explanation on how things work, check out the guide [router](https://router.vuejs.org/zh/).
