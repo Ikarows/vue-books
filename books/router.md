@@ -14,7 +14,7 @@ cnpm install vue-router
 ```
 
 ### main.js 中注册
-```
+```bash
 import Vue from 'vue'
 import App from './App'
 import router from './router' //全局注册
@@ -31,7 +31,7 @@ new Vue({
 ```
 
 ### 基础代码
-```
+```bash
 // router/index.js
 
 import Vue from 'vue'
@@ -53,7 +53,7 @@ export default new Router({
 
 > 普通路由
 
-```
+```bash
 export default new Router({
 	routes: [{
 		path: '/',
@@ -64,7 +64,7 @@ export default new Router({
 
 > 子路由
 
-```
+```bash
 export default new Router({
 	routes: [
 		{
@@ -83,7 +83,7 @@ export default new Router({
 
 > 按需加载
 
-```
+```bash
 //使用按需加载的话就不用去import组件进来了，推荐使用此方式
 
 export default new Router({
@@ -105,7 +105,7 @@ export default new Router({
 
 ### 组件页面上的链接使用，替代a标签
 
-```
+```bash
 // 方式1：
 
 <!-- 普通链接 -->
@@ -128,7 +128,7 @@ export default new Router({
 
 ### 动态跳转
 
-```
+```bash
 export default {
 	name: 'game',
 	mounted: function () {
@@ -149,7 +149,7 @@ export default {
 
 ### 重定向
 
-```
+```bash
 export default new Router({
 	routes: [{
 		path: '/',
@@ -162,7 +162,7 @@ export default new Router({
 
 ### router.go(n)
 
-```
+```bash
 // 在浏览器记录中前进一步，等同于 history.forward()
 router.go(1)
 
@@ -171,6 +171,58 @@ router.go(-1)
 
 // 前进 3 步记录
 router.go(3)
+```
+
+### 全局钩子函数（可以做一些全局性的路由拦截，如登录验证） 写在main.js中
+
+```bash
+router.beforeEach((to, from, next)=>{
+  //do something
+  next();
+});
+router.afterEach((to, from, next) => {
+    console.log(to.path);
+});
+```
+
+### 单个页面钩子函数 写在router/index.js中
+
+```bash
+const router = new VueRouter({
+  routes: [
+    {
+      path: '/foo',
+      component: Foo,
+      // 配置哪几个页面需要登录的时候，你可以在meta中加入一个 requiresAuth标志位,然后在 全局钩子函数 beforeEach中去校验目标页面是否需要登录。
+      meta: { requiresAuth: true },
+      beforeEnter: (to, from, next) => {
+        // ...
+      }
+    }
+  ]
+})
+```
+
+### 登录验证实例
+
+```bash
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    //校验这个目标页面是否需要登录
+    if (!auth.loggedIn()) {  
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() // 确保一定要调用 next()
+  }
+})
+
+//这个auth.loggedIn 方法是外部引入的，你可以先写好一个校验是否登录的方法，再import进 router.js中去判断。
 ```
 
 For a detailed explanation on how things work, check out the guide [router](https://router.vuejs.org/zh/).
